@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales enquiry · Helios Equipment Services</title>
+  <link rel="stylesheet" href="forms.css">
+
+  <!-- SAL-01 / SI-01: standard Salesforce Web-to-Lead form, styled for GitHub Pages.
+       The action URL, oid, captcha_settings, site key and the 00N... field ids come from the HTML
+       that Salesforce generated (Setup > Web-to-Lead > Create Web-to-Lead Form, 22 Oct 2026).
+       If you ever recreate a field or the key pair, regenerate the form and update them here.
+       The reCAPTCHA SECRET key never goes in this file; it stays in Salesforce. -->
+
+  <!-- reCAPTCHA v2 ("I'm not a robot") library, as in the Salesforce-generated HTML -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <!-- Salesforce timestamp script (keeps the captcha_settings "ts" value fresh), identical to the generated one -->
+  <script>
+    function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500);
+  </script>
+</head>
+<body>
+  <header>
+    <a href="index.html">Helios Equipment Services</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <h1>Sales enquiry</h1>
+      <p class="lead">Tell us about the cooling or compressed-air equipment you need. A member of our sales team for your region will contact you within one working day.</p>
+
+      <form action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DjV000006Qjdx" method="POST" data-validate novalidate>
+        <!-- captcha_settings: copied exactly from the Salesforce-generated HTML (key pair HES_Forms) -->
+        <input type=hidden name='captcha_settings' value='{"keyname":"HES_Forms","fallback":"true","orgId":"00DjV000006Qjdx","ts":""}'>
+        <input type="hidden" name="oid" value="00DjV000006Qjdx">
+        <input type="hidden" name="retURL" value="https://riazulzannat.github.io/hes-web-forms/enquiry-thanks.html">
+        <!-- Lead Source = Web: used by the lead assignment rule and the auto-response rule -->
+        <input type="hidden" name="lead_source" value="Web">
+
+        <!-- DEBUG (troubleshooting only, see the guide): remove the two comment marks around the next two lines,
+             submit once, read the page Salesforce shows, then put the comment marks back.
+        <input type="hidden" name="debug" value="1">
+        <input type="hidden" name="debugEmail" value="pikipoka333@gmail.com">
+        -->
+
+        <div class="grid">
+          <div class="field">
+            <label for="first_name">First name <span class="req">*</span></label>
+            <input id="first_name" name="first_name" type="text" maxlength="40" autocomplete="given-name" required>
+            <small class="error">Please enter your first name.</small>
+          </div>
+
+          <div class="field">
+            <label for="last_name">Last name <span class="req">*</span></label>
+            <input id="last_name" name="last_name" type="text" maxlength="80" autocomplete="family-name" required>
+            <small class="error">Please enter your last name.</small>
+          </div>
+
+          <div class="field">
+            <label for="email">Work e-mail <span class="req">*</span></label>
+            <input id="email" name="email" type="email" maxlength="80" autocomplete="email" required>
+            <small class="error">Please enter a valid e-mail address, for example name@company.com.</small>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" pattern="[0-9+\(\)\-\s]{6,40}">
+            <small class="error">Use digits, spaces, +, - or brackets only.</small>
+          </div>
+
+          <div class="field">
+            <label for="company">Company <span class="req">*</span></label>
+            <input id="company" name="company" type="text" maxlength="40" autocomplete="organization" required>
+            <small class="error">Please enter your company name.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000jQvoK">Region <span class="req">*</span></label>
+            <select id="00NjV00000jQvoK" name="00NjV00000jQvoK" required>
+              <option value="">-- Choose your region --</option>
+              <option value="Benelux">Benelux</option>
+              <option value="Nordics">Nordics</option>
+              <option value="DACH">DACH</option>
+            </select>
+            <small class="error">Please choose the region of your site.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000kEVoE">Equipment type <span class="req">*</span></label>
+            <select id="00NjV00000kEVoE" name="00NjV00000kEVoE" required>
+              <option value="">-- Choose equipment --</option>
+              <option value="Chiller">Chiller</option>
+              <option value="Compressor">Compressor</option>
+              <option value="Air Dryer">Air Dryer</option>
+              <option value="Other">Other</option>
+            </select>
+            <small class="error">Please choose the type of equipment.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000kIv6z">Site postcode <span class="req">*</span></label>
+            <input id="00NjV00000kIv6z" name="00NjV00000kIv6z" type="text" maxlength="20" autocomplete="postal-code" required>
+            <small class="hint">Where the equipment will be installed.</small>
+            <small class="error">Please enter the postcode of the site.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000kIvlJ">Indicative budget (EUR)</label>
+            <input id="00NjV00000kIvlJ" name="00NjV00000kIvlJ" type="number" min="0" max="99999999" step="1" inputmode="numeric">
+            <small class="hint">Optional. A rough figure helps us propose the right size.</small>
+            <small class="error">Please enter a whole number of euros, without dots or commas.</small>
+          </div>
+
+          <div class="field full">
+            <label for="00NjV00000kIwhN">Your enquiry <span class="req">*</span></label>
+            <textarea id="00NjV00000kIwhN" name="00NjV00000kIwhN" maxlength="5000" required placeholder="For example: we need a 200 kW chiller for a new cold store, installation in March."></textarea>
+            <small class="error">Please describe what you need.</small>
+          </div>
+        </div>
+
+        <div class="captcha">
+          <div class="g-recaptcha" data-sitekey="6LfTTvotAAAAALjUf3uKuSdztqoK5Zl1tNIFXX2N"></div>
+          <small class="error" id="captcha-error">Please tick "I'm not a robot" before sending.</small>
+        </div>
+
+        <button type="submit">Send enquiry</button>
+        <p class="privacy">We use your details only to answer this enquiry.</p>
+      </form>
+    </div>
+  </main>
+
+  <footer>Helios Equipment Services · Rotterdam</footer>
+  <script src="forms.js"></script>
+</body>
+</html>
