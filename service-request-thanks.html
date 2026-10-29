@@ -3,22 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
   <title>Request received · Helios Equipment Services</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='.5' stop-color='%23f0a202'/%3E%3Cstop offset='.5' stop-color='%235fa8e6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='15' fill='url(%23g)'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="forms.css">
 </head>
 <body>
+  <!-- INT-03 / UI-07: Web-to-Case Return URL (retURL). Salesforce sends the visitor here
+       after it accepts the form. Keep this file name: it is set in the Web-to-Case HTML Generator. -->
   <header>
     <a href="index.html">Helios Equipment Services</a>
   </header>
+
   <main>
     <div class="card">
+      <div class="confirm-mark" aria-hidden="true">
+        <svg viewBox="0 0 30 30"><path d="M7 15.5l5.5 5.5L23 10"/></svg>
+      </div>
       <h1>Thank you, we have your request</h1>
-      <p class="lead">You will get a confirmation e-mail with your case number within a few minutes. A dispatcher for your region will contact you within one working day.</p>
-      <p>To add photos or more details later, reply to the confirmation e-mail and keep its subject line unchanged.</p>
-      <p>If the confirmation does not arrive, please check your spam folder.</p>
-      <p><a href="index.html">Back to the Helios home page</a></p>
+      <h2>What happens next</h2>
+      <ol class="next-steps">
+        <li>
+          <strong>Confirmation e-mail with your case number</strong>
+          <span>You will get it within a few minutes. If it does not arrive, please check your spam folder.</span>
+        </li>
+        <li>
+          <strong>Contact from a dispatcher</strong>
+          <span>A dispatcher for your region will contact you within one working day.</span>
+        </li>
+      </ol>
+
+      <p class="tip">To add photos or more details later, reply to the confirmation e-mail and keep its subject line unchanged.</p>
+
+      <div class="actions">
+        <a class="button" href="index.html">Back to the home page</a>
+        <a class="button-secondary" href="service-request.html">Send another request</a>
+      </div>
     </div>
   </main>
+
   <footer>Helios Equipment Services · Rotterdam</footer>
 </body>
 </html>

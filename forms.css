@@ -1,86 +1,373 @@
-/* Helios Equipment Services - shared styles for the enquiry form (SAL-01, 22 Oct)
-   and the service request form (INT-03, 23 Oct). UI-07: responsive, clear errors. */
+/* Helios Equipment Services - shared styles for the web pages on GitHub Pages:
+   home (index.html), sales enquiry (SAL-01), service request (INT-03) and both
+   thank-you pages. UI-07: responsive, clear errors.
+
+   Compatibility contract with forms.js and the Salesforce form markup:
+   - .error is hidden until the form gets the class "was-validated"
+   - form.was-validated :invalid ~ .error shows the message under a bad field
+   - #captcha-error.show shows the reCAPTCHA message
+   - button[disabled] is the "Sending..." state
+   Nothing in this file changes a field name, a value or what is sent to Salesforce.
+
+   Fonts: only fonts already installed on the visitor's device. No web-font
+   download, so no visitor IP address goes to a font CDN (EU/GDPR-friendly). */
+
 :root {
-  --ink: #1b2a3a;
-  --muted: #5b6b7c;
-  --line: #c9d3dd;
-  --brand: #0b5cad;
-  --brand-dark: #08457f;
-  --error: #b3261e;
-  --bg: #f5f8fb;
+  --ink: #13263b;          /* deep steel navy: header, headings */
+  --muted: #56677a;        /* secondary text */
+  --line: #c8d4de;         /* borders */
+  --frost: #edf2f6;        /* page background */
   --card: #ffffff;
+  --field: #fbfcfd;        /* input background */
+  --brand: #0b5cad;        /* Helios blue: buttons, links, focus */
+  --brand-dark: #08457f;
+  --sun: #f0a202;          /* Helios amber: logo mark and card edge only */
+  --error: #b3261e;
+  --error-bg: #fdf3f2;
+
+  --display: "Bahnschrift", "DIN Alternate", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 8px;
+  --band: 200px;           /* height of the navy band behind the top of the card */
 }
+
 * { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--ink);
-  background: var(--bg);
-  line-height: 1.5;
+  background:
+    linear-gradient(var(--ink), var(--ink)) top / 100% var(--band) no-repeat,
+    var(--frost);
 }
+
+/* ---------- Header (same markup on every page: <header><a>…</a></header>) ---------- */
 header {
-  background: var(--brand);
+  background: var(--ink);
   color: #fff;
-  padding: 20px 16px;
+  /* left edge of the logo lines up with the left edge of the card below */
+  padding: 18px max(16px, calc((100% - 728px) / 2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-header a { color: #fff; text-decoration: none; font-weight: 600; }
+header a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+/* Logo mark: the sun (Helios) meeting the cold (cooling) */
+header a::before {
+  content: "";
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sun) 0 50%, #5fa8e6 50% 100%);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+}
+header a:hover { color: #dce8f3; }
+header a:focus-visible { outline: 3px solid var(--sun); outline-offset: 4px; border-radius: 4px; }
+
 main {
-  max-width: 720px;
-  margin: 24px auto;
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 760px;
+  margin: 32px auto 0;
   padding: 0 16px;
 }
+
+/* ---------- Card ---------- */
 .card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 24px;
+  border-top: 4px solid var(--sun);
+  border-radius: var(--radius);
+  padding: 36px 40px 32px;
+  box-shadow: 0 1px 2px rgba(19, 38, 59, 0.06), 0 18px 40px -20px rgba(19, 38, 59, 0.35);
 }
-h1 { font-size: 1.6rem; margin: 0 0 8px; }
-p.lead { color: var(--muted); margin: 0 0 24px; }
+
+h1, h2 {
+  font-family: var(--display);
+  color: var(--ink);
+  line-height: 1.2;
+}
+h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
+h2 { font-size: 1.15rem; font-weight: 600; margin: 28px 0 14px; }
+
+p { margin: 0 0 12px; }
+p.lead { color: var(--muted); font-size: 1.05rem; max-width: 62ch; margin: 0 0 28px; }
+
+a { color: var(--brand); text-underline-offset: 3px; }
+a:hover { color: var(--brand-dark); }
+
+/* ---------- Form layout ---------- */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px 24px;
 }
-.field { display: flex; flex-direction: column; }
+.field { display: flex; flex-direction: column; min-width: 0; }
 .field.full { grid-column: 1 / -1; }
-label { font-weight: 600; margin-bottom: 4px; }
-label .req { color: var(--error); }
+
+label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+label .req { color: var(--error); margin-left: 2px; }
+
 input, select, textarea {
   font: inherit;
+  color: var(--ink);
+  width: 100%;
+  min-height: 46px;
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #fff;
-  width: 100%;
+  background-color: var(--field);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-textarea { min-height: 120px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: #5d6d80; }
+input:hover, select:hover, textarea:hover { border-color: #9fb2c3; }
 input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--brand);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--brand);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(11, 92, 173, 0.2);
 }
-.hint { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
-.error { display: none; color: var(--error); font-size: 0.85rem; margin-top: 4px; }
-form.was-validated :invalid { border-color: var(--error); }
+textarea { min-height: 140px; resize: vertical; }
+
+/* Native select with our own arrow */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2356677a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+
+.hint { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+
+/* ---------- Validation (driven by forms.js; keep these rules) ---------- */
+.error {
+  display: none;
+  color: var(--error);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 6px;
+}
+form.was-validated :invalid {
+  border-color: var(--error);
+  background-color: var(--error-bg);
+}
+form.was-validated :invalid:focus { box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.18); }
 form.was-validated :invalid ~ .error { display: block; }
-.captcha { margin: 24px 0 8px; }
+/* Hide the hint when the error under the same field is showing (browsers with :has) */
+form.was-validated .field:has(:invalid) .hint { display: none; }
+form.was-validated .field:has(:invalid) label { color: var(--error); }
+
+/* ---------- reCAPTCHA ---------- */
+.captcha {
+  margin: 32px 0 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
 #captcha-error { display: none; }
 #captcha-error.show { display: block; }
-button {
+
+/* ---------- Buttons ---------- */
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
   font: inherit;
   font-weight: 600;
   color: #fff;
   background: var(--brand);
   border: 0;
   border-radius: 6px;
-  padding: 12px 24px;
+  padding: 12px 28px;
+  margin-top: 16px;
   cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
 }
-button:hover { background: var(--brand-dark); }
+button:hover, .button:hover { background: var(--brand-dark); color: #fff; }
+button:focus-visible, .button:focus-visible,
+.button-secondary:focus-visible, .route:focus-visible, a:focus-visible {
+  outline: 3px solid var(--brand-dark);
+  outline-offset: 2px;
+}
 button[disabled] { opacity: 0.6; cursor: wait; }
-.privacy { color: var(--muted); font-size: 0.85rem; margin-top: 16px; }
-footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 24px 16px; }
-@media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
-  .card { padding: 16px; }
+
+.button-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  margin-top: 16px;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+.button-secondary:hover { border-color: var(--brand); color: var(--brand-dark); }
+
+.privacy { color: var(--muted); font-size: 0.85rem; margin: 16px 0 0; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 32px 16px;
+}
+
+/* ---------- Home page (index.html) ---------- */
+body.home { background: var(--frost); }
+.hero {
+  background: var(--ink);
+  color: #fff;
+  padding: 40px 0 112px;
+}
+.hero-inner { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+.hero h1 { color: #fff; font-size: 2.4rem; margin-bottom: 12px; }
+.hero p { color: #c3d2e0; font-size: 1.1rem; max-width: 56ch; margin: 0; }
+
+body.home main { margin-top: -80px; }
+.routes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.route {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--sun);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: 0 1px 2px rgba(19, 38, 59, 0.06), 0 18px 40px -20px rgba(19, 38, 59, 0.35);
+  transition: border-color 0.15s ease;
+}
+.route:hover { border-color: var(--brand); border-top-color: var(--sun); color: var(--ink); }
+.route svg { width: 36px; height: 36px; color: var(--brand); margin-bottom: 16px; }
+.route h2 { margin: 0 0 8px; font-size: 1.3rem; }
+.route p { color: var(--muted); margin: 0 0 20px; flex: 1; }
+.route .route-action { font-weight: 600; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.route:hover .route-action { color: var(--brand-dark); }
+
+.home-note { color: var(--muted); font-size: 0.95rem; margin: 28px 0 0; }
+
+/* ---------- Thank-you pages ---------- */
+.confirm-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e6f0fa;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+}
+.confirm-mark svg { width: 30px; height: 30px; }
+.confirm-mark path {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: draw-check 0.5s 0.15s ease-out forwards;
+}
+@keyframes draw-check { to { stroke-dashoffset: 0; } }
+
+.next-steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--line);
+}
+.next-steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 18px 28px;
+}
+.next-steps li:last-child { padding-bottom: 0; }
+.next-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: -13px;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--brand);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+.next-steps strong { display: block; }
+.next-steps span { color: var(--muted); }
+
+.tip {
+  margin: 24px 0 0;
+  padding: 14px 16px;
+  background: #f4f7fa;
+  border-left: 3px solid var(--sun);
+  border-radius: 0 6px 6px 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.actions .button, .actions .button-secondary { margin-top: 0; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 640px) {
+  :root { --band: 150px; }
+  main { margin-top: 20px; }
+  .grid, .routes { grid-template-columns: 1fr; }
+  .card { padding: 24px 20px; }
+  .route { padding: 24px 20px; }
+  h1 { font-size: 1.6rem; }
+  .hero { padding: 28px 0 100px; }
+  .hero h1 { font-size: 1.9rem; }
+  button { width: 100%; }
+  .actions a { flex: 1 1 100%; justify-content: center; }
+}
+/* reCAPTCHA is a fixed 304 px box; shrink it on very narrow phones */
+@media (max-width: 360px) {
+  .g-recaptcha { transform: scale(0.88); transform-origin: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .confirm-mark path { stroke-dashoffset: 0; }
 }
