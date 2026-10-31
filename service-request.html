@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service request · Helios Equipment Services</title>
+  <link rel="stylesheet" href="forms.css">
+
+  <!-- INT-03 / SI-02: standard Salesforce Web-to-Case form, styled for GitHub Pages.
+       The form action, org id, captcha settings, site key and the two custom field ids
+       come from the HTML that Salesforce generated (Setup > Web-to-Case HTML Generator).
+       No record type ID is sent: the Case before-save flow sets the record type
+       from the request type (SRS INT-03). The reCAPTCHA SECRET key never goes in
+       this file; it stays in Salesforce. -->
+
+  <!-- reCAPTCHA v2 ("I'm not a robot") library, as in the Salesforce-generated HTML -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <!-- Salesforce timestamp script (keeps the captcha_settings "ts" value fresh).
+       If the block in YOUR generated HTML differs from this one, use yours instead. -->
+  <script>
+    function timestamp() { var response = document.getElementById("g-recaptcha-response"); if (response == null || response.value.trim() == "") {var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);elems["ts"] = JSON.stringify(new Date().getTime());document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems); } } setInterval(timestamp, 500);
+  </script>
+</head>
+<body>
+  <header>
+    <a href="index.html">Helios Equipment Services</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <h1>Service request</h1>
+      <p class="lead">Report a fault, ask for a service visit or send us a billing question. We confirm every request by e-mail with a case number, and a dispatcher for your region contacts you within one working day.</p>
+
+      <form action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8&orgId=00DjV000006Qjdx" method="POST" data-validate novalidate>
+        <!-- captcha settings, copied from the generated HTML -->
+        <input type=hidden name='captcha_settings' value='{"keyname":"HES_Forms","fallback":"true","orgId":"00DjV000006Qjdx","ts":""}'>
+        <!-- Web-to-Case uses "orgid" (Web-to-Lead uses "oid"). -->
+        <input type="hidden" name="orgid" value="00DjV000006Qjdx">
+        <input type="hidden" name="retURL" value="https://riazulzannat.github.io/hes-web-forms/service-request-thanks.html">
+
+        <!-- DEBUG (troubleshooting only, see the guide): remove the two comment marks around the next two lines,
+             submit once, read the page Salesforce shows, then put the comment marks back.
+        <input type="hidden" name="debug" value="1">
+        <input type="hidden" name="debugEmail" value="YOUR-EMAIL-HERE">
+        -->
+
+        <div class="grid">
+          <div class="field">
+            <label for="name">Your name <span class="req">*</span></label>
+            <input id="name" name="name" type="text" maxlength="80" autocomplete="name" required>
+            <small class="error">Please enter your name.</small>
+          </div>
+
+          <div class="field">
+            <label for="email">Work e-mail <span class="req">*</span></label>
+            <input id="email" name="email" type="email" maxlength="80" autocomplete="email" required>
+            <small class="hint">We send the confirmation and case number here.</small>
+            <small class="error">Please enter a valid e-mail address, for example name@company.com.</small>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" pattern="[0-9+\(\)\-\s]{6,40}">
+            <small class="error">Use digits, spaces, +, - or brackets only.</small>
+          </div>
+
+          <div class="field">
+            <label for="company">Company <span class="req">*</span></label>
+            <input id="company" name="company" type="text" maxlength="80" autocomplete="organization" required>
+            <small class="error">Please enter your company name.</small>
+          </div>
+
+          <div class="field">
+            <label for="type">Request type <span class="req">*</span></label>
+            <select id="type" name="type" required>
+              <option value="">-- Choose a request type --</option>
+              <option value="Technical">Technical: fault, service visit or maintenance</option>
+              <option value="Billing">Billing: invoice, payment or contract</option>
+            </select>
+            <small class="error">Please choose the type of request.</small>
+          </div>
+
+          <div class="field">
+            <label for="priority">Urgency <span class="req">*</span></label>
+            <select id="priority" name="priority" required>
+              <option value="">-- Choose the urgency --</option>
+              <option value="High">High: equipment is down</option>
+              <option value="Medium">Medium: equipment works, but not as it should</option>
+              <option value="Low">Low: question or planned work</option>
+            </select>
+            <small class="error">Please choose how urgent this is.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000jKVRf">Region <span class="req">*</span></label>
+            <select id="00NjV00000jKVRf" name="00NjV00000jKVRf" required>
+              <option value="">-- Choose your region --</option>
+              <option value="Benelux">Benelux</option>
+              <option value="Nordics">Nordics</option>
+              <option value="DACH">DACH</option>
+            </select>
+            <small class="hint">The region of the site where the equipment is installed.</small>
+            <small class="error">Please choose the region of your site.</small>
+          </div>
+
+          <div class="field">
+            <label for="00NjV00000mhQA5">Equipment serial number</label>
+            <input id="00NjV00000mhQA5" name="00NjV00000mhQA5" type="text" maxlength="40" autocomplete="off" pattern="[A-Za-z0-9\-]{3,40}" title="Serial number only, for example HES-SN-10012">
+            <small class="hint">Optional. Serial number only, as printed on the type plate (for example HES-SN-10012).</small>
+            <small class="error">Use the serial number only, for example HES-SN-10012.</small>
+          </div>
+
+          <div class="field full">
+            <label for="subject">Subject <span class="req">*</span></label>
+            <input id="subject" name="subject" type="text" maxlength="80" required placeholder="For example: Chiller CH-200 shows alarm E14">
+            <small class="error">Please give your request a short subject.</small>
+          </div>
+
+          <div class="field full">
+            <label for="description">Describe the problem or question <span class="req">*</span></label>
+            <textarea id="description" name="description" maxlength="32000" required placeholder="What happens, since when, and what you have already tried."></textarea>
+            <small class="error">Please describe your request.</small>
+          </div>
+        </div>
+
+        <div class="captcha">
+          <div class="g-recaptcha" data-sitekey="6LfTTvotAAAAALjUf3uKuSdztqoK5Zl1tNIFXX2N"></div>
+          <small class="error" id="captcha-error">Please tick "I'm not a robot" before sending.</small>
+        </div>
+
+        <button type="submit">Send request</button>
+        <p class="privacy">We use your details only to handle this request.</p>
+      </form>
+    </div>
+  </main>
+
+  <footer>Helios Equipment Services · Rotterdam</footer>
+  <script src="forms.js"></script>
+</body>
+</html>
